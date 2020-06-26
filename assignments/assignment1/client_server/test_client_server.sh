@@ -2,30 +2,20 @@
 ##
 ## SYNOPSIS
 ##    test_client_server
-##
-## DESCRIPTION
-##    COS 461 test script for assignment 1.
-##    Runs 5 different tests between each possible client/server combination.
 
 # Check correct number of arguments
 if [[ $# -ne 2 ]]; then
-  printf "USAGE: $0 [python|go] [server port]\n"
+  printf "USAGE: $0 [server port]\n"
   exit
 fi
 
 WORKSPACE=/vagrant/assignment1/.workspace
 numCorrect=0
 TESTS_PER_IMPL=5 # REMEBER TO UPDATE THIS IF NUMBER CHANGES!!!
-LANGUAGE=$1
 PORT=$2
-SKIP_MESSAGE="One or both programs missing. Skipping. \n\n"
 testNum=1
 
 # Locations of student and instructor files
-SCC=/vagrant/assignment1/client_server/client-c # Student C client
-SCS=/vagrant/assignment1/client_server/server-c # Student C server
-SPC=/vagrant/assignment1/client_server/client-python.py # Student python client
-SPS=/vagrant/assignment1/client_server/server-python.py # Student python server
 SGC=/vagrant/assignment1/client_server/client-go # Student go client
 SGS=/vagrant/assignment1/client_server/server-go # Student go server
 
@@ -166,90 +156,11 @@ rm -rf $WORKSPACE
 mkdir $WORKSPACE
 cd $WORKSPACE
 
-printf "================================================================\n" 
-printf "Testing C client against C server (1/4)                         \n" 
-printf "================================================================\n" 
-
-if [[ -f $SCC && -f $SCS ]]; then
-  all-tests $SCC $SCS $PORT
+if [[ -f $SGC && -f $SGS ]]; then
+  all-tests $SGC $SGS $PORT
 else
   printf "\n$SKIP_MESSAGE"
   ((testNum+=$TESTS_PER_IMPL))
-fi
-
-if [[ $LANGUAGE == "python" ]]; then
-
-  printf "================================================================\n" 
-  printf "Testing Python client against Python server (2/4)               \n" 
-  printf "================================================================\n" 
-
-  if [[ -f $SPC && -f $SPS ]]; then
-    all-tests "python $SPC" "python $SPS" $PORT
-  else
-    printf "\n$SKIP_MESSAGE"
-    ((testNum+=$TESTS_PER_IMPL))
-  fi
-
-  printf "================================================================\n" 
-  printf "Testing C client against Python server (3/4)                    \n" 
-  printf "================================================================\n" 
-
-  if [[ -f $SCC && -f $SPS ]]; then
-    all-tests $SCC "python $SPS" $PORT
-  else
-    printf "\n$SKIP_MESSAGE"
-    ((testNum+=$TESTS_PER_IMPL))
-  fi
-
-  printf "================================================================\n" 
-  printf "Testing Python client against C server (4/4)                    \n" 
-  printf "================================================================\n" 
-
-  if [[ -f $SPC && -f $SCS ]]; then
-    all-tests "python $SPC" $SCS $PORT
-  else
-    printf "\n$SKIP_MESSAGE"
-    ((testNum+=$TESTS_PER_IMPL))
-  fi
-
-elif [[ $LANGUAGE == "go" ]]; then
-
-  printf "================================================================\n" 
-  printf "Testing Go client against Go server (2/4)                       \n" 
-  printf "================================================================\n" 
-
-  if [[ -f $SGC && -f $SGS ]]; then
-    all-tests $SGC $SGS $PORT
-  else
-    printf "\n$SKIP_MESSAGE"
-    ((testNum+=$TESTS_PER_IMPL))
-  fi
-
-  printf "================================================================\n" 
-  printf "Testing C client against Go server (3/4)                        \n" 
-  printf "================================================================\n" 
-
-  if [[ -f $SCC && -f $SGS ]]; then
-    all-tests $SCC $SGS $PORT
-  else
-    printf "\n$SKIP_MESSAGE"
-    ((testNum+=$TESTS_PER_IMPL))
-  fi
-
-  printf "================================================================\n" 
-  printf "Testing Go client against C server (4/4)                        \n" 
-  printf "================================================================\n" 
-
-  if [[ -f $SGC && -f $SCS ]]; then
-    all-tests $SGC $SCS $PORT
-  else
-    printf "\n$SKIP_MESSAGE"
-    ((testNum+=$TESTS_PER_IMPL))
-  fi
-
-else
-  printf "Language invalid (must be python or go)\n\n"
-  ((testNum+=3*TESTS_PER_IMPL))
 fi
 
 rm -rf $WORKSPACE
