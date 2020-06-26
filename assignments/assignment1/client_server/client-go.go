@@ -7,10 +7,10 @@
 package main
 
 import (
+	"io"
 	"log"
 	"net"
-  "os"
-  "io"
+	"os"
 )
 
 const SEND_BUFFER_SIZE = 2048
@@ -35,16 +35,16 @@ func client(serverIP string, serverPort string) {
 			_, err := conn.Write(buf[:n]) // 1. Write func
 			if err != nil {
 				log.Fatalln(err)
-      }
-    }
-    
-    if err != nil{
-      if err == io.EOF{
-        break
-      }
+			}
+		}
 
-      log.Fatalln(err)
-    }
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+
+			log.Fatalln(err)
+		}
 	}
 
 }
