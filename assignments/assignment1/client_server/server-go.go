@@ -21,7 +21,7 @@ const RECV_BUFFER_SIZE = 2048
  * Print received message to stdout
  */
 func server(serverPort string) {
-	portString := ":" + serverPort           // 1. go := vs =
+	portString := ":" + serverPort
 	ln, err := net.Listen("tcp", portString) // 1. Listen func
 
 	if err != nil {
@@ -29,14 +29,14 @@ func server(serverPort string) {
 		return
 	}
 
-	for { // 1. for loop in go
-		conn, err := ln.Accept() // 1. multi return in go
-		if err != nil {          // 1. nil key world in go
+	for {
+		conn, err := ln.Accept()
+		if err != nil {
 			log.Fatal(err)
 			return
 		}
-
-		go handelConnection(conn) // 1. go keyword
+		fmt.Println("creating new handlelConnection")
+		go handelConnection(conn)
 	}
 }
 
@@ -50,17 +50,17 @@ func main() {
 }
 
 func handelConnection(c net.Conn) {
-	defer c.Close()                       // 1. defer in go 2. conn CLose func
-	buf := make([]byte, RECV_BUFFER_SIZE) // 1. make func 2. func in go
+	defer c.Close()
+	buf := make([]byte, RECV_BUFFER_SIZE)
 
 	for {
 		n, err := c.Read(buf) // 1. Read func
-		if n > 0 {            // go if condition
-			fmt.Fprint(os.Stdout, string(buf[:n])) // 1. fmt all print methods 2. string  method 3. array with :
+		if n > 0 {
+			fmt.Fprint(os.Stdout, string(buf[:n]))
 		}
 
 		if err != nil {
-			if err == io.EOF { // 1. io namespace
+			if err == io.EOF {
 				break
 			}
 			log.Fatal(err)
